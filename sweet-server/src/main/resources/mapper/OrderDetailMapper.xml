@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sky.mapper.OrderDetailMapper">
+
+<!--插入订单数据-->
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        insert into orders(number, status, user_id, address_book_id, order_time, checkout_time, pay_method, pay_status, amount, remark, phone, address, user_name, consignee, cancel_reason, rejection_reason, cancel_time, estimated_delivery_time, delivery_status, delivery_time, pack_amount, tableware_number, tableware_status)
+        VALUES (#{number}, #{status}, #{userId}, #{addressBookId}, #{orderTime}, #{checkoutTime}, #{payMethod}, #{payStatus}, #{amount}, #{remark}, #{phone}, #{address}, #{userName}, #{consignee}, #{cancelReason}, #{rejectionReason}, #{cancelTime}, #{estimatedDeliveryTime}, #{deliveryStatus}, #{deliveryTime}, #{packAmount}, #{tablewareNumber}, #{tablewareStatus})
+
+    </insert>
+
+<!--批量插入数据-->
+    <insert id="insertBatch">
+        insert into order_detail(name, image, order_id, dish_id, setmeal_id, dish_flavor, amount)
+        VALUES
+        <foreach collection="orderDetailList" item="od" separator=",">
+            (#{od.name}, #{od.image}, #{od.orderId}, #{od.dishId}, #{od.setmealId}, #{od.dishFlavor}, #{od.amount})
+        </foreach>
+    </insert>
+
+     <!--查询订单明细-->
+    <select id="getByOrderId" resultType="com.sky.entity.OrderDetail">
+        select * from order_detail where order_id=#{orderId}
+    </select>
+</mapper>

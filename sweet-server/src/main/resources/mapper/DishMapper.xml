@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sky.mapper.DishMapper">
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        insert into dish(name, category_id, price, image, description, status, create_time, update_time, create_user, update_user)
+        values (#{name}, #{categoryId}, #{price}, #{image}, #{description}, #{status}, #{createTime}, #{updateTime}, #{createUser}, #{updateUser})
+    </insert>
+
+    <!--分页查询-->
+    <select id="pageQuery" resultType="com.sky.dto.DishDTO">
+        select d.*,c.name category_name from dish d left join category c on d.category_id = c.id
+        <where>
+            <if test="name!=null">
+                and d.name like concat('%',#{name},'%');
+            </if>
+            <if test="categoryId!=null">
+                and d.catefory_id=#{categoryId}
+            </if>
+            <if test="status!=null">
+                and status=#{status}
+            </if>
+        </where>
+        order by d.create_time desc
+    </select>
+
+    <!--根据菜品id获得数据-->
+    <select id="getById" resultType="com.sky.entity.Dish">
+        select * from dish where id=#{id}
+    </select>
+
+    <!--根据菜品id删除id-->
+    <delete id="deleteById">
+        delete from dish where id = #{id}
+    </delete>
+
+    <!--修改菜品-->
+    <update id="update">
+            update dish
+            <set>
+                <if test="name != null">
+                    name = #{name},
+                </if>
+                <if test="categoryId != null">
+                    category_id = #{categoryId},
+                </if>
+                <if test="price != null">
+                    price = #{price},
+                </if>
+                <if test="image != null">
+                    image = #{image},
+                </if>
+                <if test="description != null">
+                    description = #{description},
+                </if>
+                <if test="status != null">
+                    status = #{status},
+                </if>
+                update_time = now()
+            </set>
+            where id = #{id}
+        </update>
+
+    <!--根据分类id查询菜品-->
+    <select id="select" resultType="com.sky.entity.Dish">
+        select * from dish
+        <where>
+            <if test="name!=null">
+                and name like concat('%',#{name},'%')
+            </if>
+            <if test="categoryId!=null">
+                and category_id=#{categoryId}
+            </if>
+            <if test="status!=null">
+                and status=#{status}
+            </if>
+        </where>
+        order by create_time desc
+    </select>
+
+    <!--起售和停售-->
+    <update id="startOrStop">
+        update dish set status=#{status} where id=#{id}
+    </update>
+
+    <!--条件查询菜品和口味-->
+    <select id="list" resultType="com.sky.entity.Dish">
+        select * from dish
+        <where>
+            <if test="name!=null">
+                and name like concat('%',#{name},'%')
+            </if>
+            <if test="categoryId!=null">
+                and category_id=#{categoryId}
+            </if>
+            <if test="status!=null">
+                and status=#{status}
+            </if>
+        </where>
+        order by create_time desc
+    </select>
+
+<!--根据条件统计菜品数量-->
+    <select id="countByMap" resultType="java.lang.Integer">
+        select count(id) from dish
+        <where>
+            <if test="status != null"> and status = #{status} </if>
+            <if test="categoryId != null"> and category_id = #{categoryId} </if>
+        </where>
+    </select>
+
+</mapper>
