@@ -5,3 +5,13 @@
 *Test.java
 **/test/
 **/application-dev.yml
+
+# Vue前端忽略
+node_modules/
+dist/
+npm-debug.log
+.vscode/
+
+# 微信小程序忽略
+miniprogram_npm/
+project.config.json
